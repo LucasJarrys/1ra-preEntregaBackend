@@ -31,12 +31,16 @@ router.get("/:cid", async (req, res) => {
     }
 })
 
-router.post("/", async (req, res) => {
+router.post("/:cid/product/:pid", async (req, res) => {
     try {
-        
-        const carrito = await cartManager.createCarrito();
+        const { cid, pid } = req.params
+        const producto = await productManager.getProductoById(Number(pid));
+        if (!producto) return res.status(404).json({ status: "Error", msg: "Producto no encontrado" });
 
-        res.status(201).json({status: "success", carrito});
+        const carrito = await cartManager.addProducToCart(Number(cid), Number(pid));
+        if (!carrito) return res.status(404).json({ status: "Error", msg: "Carrito no encontrado" });
+
+        res.status(200).json({status: "success", carrito});
 
     } catch (error) {
         console.log(error);

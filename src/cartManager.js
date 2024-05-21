@@ -47,6 +47,12 @@ const addProducToCart = async (cid, pid) => {
     };
 
     const index = carritos.findIndex((cart)=> cart.id === cid);
+    if (index !== -1){ //// El carrito existe, verifica si el producto ya está en el carrito
+        const existingProduct = carritos[index].productos.find((p)=> p.producto === pid);
+        if (existingProduct) { // si el producto ya existe, incrementa la cantidad
+            existingProduct.quantity += 1;
+        }
+    }
     carritos[index].productos.push(producto);
 
     await fs.promises.writeFile(pathFile, JSON.stringify(carritos));
