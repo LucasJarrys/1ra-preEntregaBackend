@@ -2,7 +2,7 @@ let productos = [];
 
 import fs from "fs";
 
-const pathFile = "./src/data/products.json";
+const pathFile = "./src/data/productos.json";
 
 // Armamos el objeto de producto
 
@@ -28,7 +28,15 @@ const addProducto = async (producto) => {
     return producto;
 };
 
+// FUNCION PARA AGREGAR PRODUTOS EN UN JSON
+
 const getProductos = async (limit) => {
-    
+    const productosJson = await fs.promises.readFile(pathFile, "utf-8");
+    const productosParse = JSON.parse(productosJson);
+    productos = productosParse || [];
+
+    if (!limit) return productos;
+
+    return productos.slice(0, limit);
 }
 
