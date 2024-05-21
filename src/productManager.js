@@ -28,7 +28,7 @@ const addProducto = async (producto) => {
     return producto;
 };
 
-// FUNCION PARA AGREGAR PRODUTOS EN UN JSON
+// FUNCION PARA CONSEGUIR PRODUTOS EN UN JSON
 
 const getProductos = async (limit) => {
     const productosJson = await fs.promises.readFile(pathFile, "utf-8");
@@ -39,4 +39,54 @@ const getProductos = async (limit) => {
 
     return productos.slice(0, limit);
 }
+
+
+// BUSCAMOS PRODUCTOS POR ID
+
+const getProductoById = async (id) => {
+    productos = await getProductos();
+    const producto = productos.find((product) => product.id === id );
+    return producto;
+};
+
+// ACTUALIZAR PRODUCTO
+
+const updateProducto = async (id, productData) => {
+    await getProductos();
+
+    const index = productos.findIndex((product) => product.id === id);
+    productos[index] = {
+    ...productos[index], // hago una copia completa
+    ...productData, // sobreescribo la data actualizada
+    };
+
+
+    await fs.promises.writeFile(pathFile, JSON.stringify(productos));
+    const producto = await getProductoById(id);
+    return producto;
+};
+
+
+// BORRAR PRODUCTO
+
+const deleteProducto = async (id) => {
+    await getProductos();
+    const producto = await getProductoById(id);
+    if (!producto) return false;
+    productos = productos.filter((product) => product.id !== id);
+    await fs.promises.writeFile(pathFile, JSON.stringify(productos));
+    return true; 
+
+};
+
+export default{
+    addProducto,
+    getProductos,
+    getProductoById,
+    updateProducto,
+    deleteProducto,
+};
+
+
+
 
