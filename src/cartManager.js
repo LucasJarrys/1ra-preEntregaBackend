@@ -52,6 +52,7 @@ const addProducToCart = async (cid, pid) => {
         if (existingProduct) { // si el producto ya existe, incrementa la cantidad
             existingProduct.quantity += 1;
         }
+        
     }
     carritos[index].productos.push(producto);
 
